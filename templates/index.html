@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8" />
+<title>ПРОФАЙБ - Найди свой вайб профессии</title>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --q-akh-mi: #6220d9;
+  --xlew-g2: #000000;
+  --zo-v-ks-m: #fa4101;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+
+/* ГЛОБАЛЬНЫЙ ПРОГРЕСС БАР СВЕРХУ */
+#topProgressBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  z-index: 10000;
+}
+
+#topProgressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #b9e901 0%, #6220d9 50%, #b9e901 100%);
+  background-size: 200% 100%;
+  animation: shimmer 8s infinite;
+  width: 0%;
+  transition: width 1.5s ease;
+  box-shadow: 0 0 20px rgba(185, 233, 1, 0.8), 0 0 40px rgba(98, 32, 217, 0.6);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+#topProgressBar.show {
+  display: block;
+}
+
+.screen {
+  background-color: #ffffff;
+  width: 1920px;  
+  margin: 0 auto; 
+  position: relative;
+}
+
+/* ГЛАВНЫЙ КОНТЕЙНЕР */
+.screen .main-container {
+  display: flex;
+  gap: 60px;
+  padding: 80px 100px;
+  min-height: 60vh;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+/* ЛЕВАЯ ЧАСТЬ - ВОПРОС И ВАРИАНТЫ */
+.screen .left-section {
+  flex: 1;
+  max-width: 550px;
+}
+
+#currentQuestion {
+  font-family: 'Dela Gothic One', Helvetica, sans-serif;
+  font-size: 48px;
+  font-weight: 400;
+  color: #000000;
+  line-height: 1.2;
+  margin-bottom: 40px;
+}
+
+#answersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.answer-option {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  padding: 18px 24px;
+  background: #f3f3f3;
+  border-radius: 20px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.answer-option:hover {
+  background: #e8e8e8;
+  border-color: #6220d9;
+}
+
+.answer-option input[type="radio"] {
+  accent-color: #6220d9;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.answer-option label {
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  color: #000000;
+  cursor: pointer;
+  flex: 1;
+  margin: 0;
+}
+
+/* СОБСТВЕННЫЙ ОТВЕТ */
+.custom-answer-section {
+  background: #f9f9f9;
+  border: 2px dashed #6220d9;
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.custom-answer-label {
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #6220d9;
+  display: block;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#customAnswerInput {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #6120d93b;
+  border-radius: 12px;
+  background: #ffffff;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #000000;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+#customAnswerInput::placeholder {
+  color: #6220d9;
+  opacity: 0.7;
+}
+
+#customAnswerInput:focus {
+  border-color: #6120d93b;
+  box-shadow: 0 0 15px rgba(185, 233, 1, 0.3);
+  background: rgba(185, 233, 1, 0.05);
+}
+
+/* ПРАВАЯ ЧАСТЬ - СОВЕТ */
+.screen .right-section {
+  flex: 0 0 auto;
+  width: 450px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.advice-bubble {
+  background: #ff5722;
+  border-radius: 30px;
+  padding: 35px 40px;
+  color: #ffffff;
+  max-width: 450px;
+  position: relative;
+}
+
+.advice-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 30px;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 0 solid transparent;
+  border-top: 20px solid #ff5722;
+}
+
+.advice-title {
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.advice-text {
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* НИЖНЯЯ ЧАСТЬ - КНОПКИ И ПРОГРЕСС */
+.screen .bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px 100px 80px 100px;
+  gap: 30px;
+  border-top: 1px solid #f0f0f0;
+}
+
+#progressContainer {
+  flex: 1;
+  max-width: 300px;
+}
+
+#progressIndicator {
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #999;
+  margin-bottom: 12px;
+  display: block;
+}
+
+#progressBar {
+  width: 100%;
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+#progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #6220d9 0%, #b9e901 100%);
+  width: 0%;
+  transition: width 0.4s ease;
+  border-radius: 10px;
+}
+
+#navigationButtons {
+  display: flex;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.nav-button {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  width: 228px;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: transparent;
+  border-radius: 40px;
+  border: 2px solid #6220d9;
+  cursor: pointer;
+  color: #6220d9;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover:not(:disabled) {
+  background-color: #6220d9;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.nav-button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-button:disabled:hover {
+  background-color: transparent;
+  color: #6220d9;
+  transform: none;
+}
+
+/* FOOTER */
+.screen .footer {
+  background: #6220d9;
+  color: #ffffff;
+  text-align: center;
+  padding: 40px 20px;
+  font-family: 'Dela Gothic One', Helvetica, sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* HIDDEN ELEMENTS */
+.hidden {
+  display: none !important;
+}
+
+#questionnaireContainer {
+  display: none;
+}
+
+#questionnaireContainer.show {
+  display: block;
+}
+
+/* LOADING */
+#loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+#loadingOverlay.show {
+  display: flex;
+}
+
+.loading-content {
+  text-align: center;
+  color: white;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+.loading-bar-container {
+  width: 300px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px auto;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #b9e901 0%, #6220d9 100%);
+  width: 0%;
+  animation: loadingAnimation 2s infinite;
+  border-radius: 10px;
+}
+
+@keyframes loadingAnimation {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 20px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ГЛАВНАЯ СТРАНИЦА */
+.screen .rectangle {
+  left: 0;
+  height: 1042px;
+  background-color: #f3f3f3;
+  position: absolute;
+  top: 0;
+  width: 1920px;
+  border-radius: 0px 0px 60px 60px;
+}
+
+.screen .text-wrapper {
+  position: absolute;
+  top: 637px;
+  left: 100px;
+  width: 627px;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .div {
+  position: absolute;
+  top: 80px;
+  left: 100px;
+  width: 206px;
+  font-family: 'Dela Gothic One', Helvetica, sans-serif;
+  font-weight: 400;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .button {
+  all: unset;
+  left: 100px;
+  box-sizing: border-box;
+  display: flex;
+  width: 415px;
+  height: 81px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  position: absolute;
+  top: 841px;
+  background-color: #6220d9;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s ease-out;
+}
+
+.screen .button:hover {
+  transform: rotate(-1deg) scale(1.05);
+  background-color: #7549e6;
+}
+
+.screen .button:active {
+  transform: scale(0.97);
+  background-color: #492ba2;
+}
+
+.screen .text-wrapper-2 {
+  position: relative;
+  width: fit-content;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .p {
+  position: absolute;
+  top: 326px;
+  left: 100px;
+  width: 912px;
+  font-family: 'Dela Gothic One', Helvetica, sans-serif;
+  font-weight: 400;
+  color: #000000;
+  font-size: 50px;
+  letter-spacing: 0;
+  line-height: 65px;
+}
+
+.screen .text {
+  display: flex;
+  width: 409px;
+  height: 92px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  position: absolute;
+  top: 465px;
+  left: 486px;
+  background-color: #b9e901;
+  border-radius: 60px;
+  transform: rotate(3.00deg);
+  cursor: pointer;
+  transition: transform 0.2s ease-out;
+}
+
+.screen .text:hover {
+  transform: rotate(-1deg) scale(1.08);
+}
+
+.screen .text-wrapper-3 {
+  position: relative;
+  width: fit-content;
+  margin-top: -1.15px;
+  font-family: 'Dela Gothic One', Helvetica, sans-serif;
+  font-weight: 400;
+  color: #000000;
+  font-size: 50px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .vector {
+  position: absolute;
+  width: 6.20%;
+  top: 725px;
+  left: 28.63%;
+}
+
+.screen .frame-2 {
+  position: absolute;
+  top: 1651px;
+  left: 0;
+  width: 1920px;
+  height: 161px;
+}
+
+.screen .rectangle-2 {
+  left: calc(50.00% - 960px);
+  height: 161px;
+  background-color: var(--q-akh-mi);
+  transform: rotate(180deg);
+  position: absolute;
+  top: 0;
+  width: 1920px;
+  border-radius: 0px 0px 60px 60px;
+}
+
+.screen .text-wrapper-4 {
+  position: absolute;
+  top: 55px;
+  left: calc(50.00% - 103px);
+  font-family: 'Dela Gothic One', Helvetica, sans-serif;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .form {
+  position: absolute;
+  top: 1387px;
+  width: 805px;
+  height: 81px;
+  display: flex;
+  gap: 0;
+  background-color: #f3f3f3;
+  border-radius: 40px;
+  box-shadow: none;
+  border: none;
+  overflow: hidden;
+}
+
+.screen .search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0 50px;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: #000000;
+  outline: none;
+  transition: all 0.2s ease-out;
+  box-sizing: border-box;
+}
+
+.screen .search-input::placeholder {
+  color: #000000;
+  opacity: 0.5;
+}
+
+.screen .search-input:focus {
+  color: #000000;
+  background-color: rgba(98, 32, 217, 0.02);
+}
+
+.screen .search-input:focus::placeholder {
+  opacity: 0.3;
+}
+
+.screen .text-wrapper-6 {
+  position: absolute;
+  top: 1478px;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 400;
+  color: var(--xlew-g2);
+  font-size: 17px;
+  letter-spacing: 0;
+  line-height: normal;
+  width: 600px;
+  min-height: 30px;
+  transition: all 0.3s ease;
+}
+
+.screen .text-wrapper-6.success {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.screen .text-wrapper-6.error {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.screen .text-wrapper-7 {
+  position: absolute;
+  top: 1142px;
+  width: 771px;
+  font-family: 'Dela Gothic One', Helvetica, sans-serif;
+  font-weight: 400;
+  color: #000000;
+  font-size: 40px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .sms {
+  position: absolute;
+  top: 1131px;
+  left: 1122px;
+  width: 798px;
+  height: 220px;
+}
+
+.screen .text-wrapper-8 {
+  position: absolute;
+  top: 1233px;
+  left: 1181px;
+  width: 661px;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .text-wrapper-9 {
+  position: absolute;
+  top: 1187px;
+  left: 1181px;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 22px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .text-wrapper-10 {
+  position: absolute;
+  top: 1283px;
+  width: 486px;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.screen .send-button {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  width: 228px;
+  height: 81px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: transparent;
+  border-radius: 40px;
+  border: 1px solid var(--q-akh-mi);
+  cursor: pointer;
+  transition: transform 0.2s ease-out, background-color 0.2s ease-out, color 0.2s ease-out;
+}
+
+.screen .send-button:hover {
+  transform: rotate(0deg) scale(1.0);
+  background-color: var(--q-akh-mi);
+}
+
+.screen .send-button:hover .text-wrapper-11 {
+  color: #ffffff;
+}
+
+.screen .send-button:active {
+  transform: scale(0.97);
+  background-color: #492ba2;
+}
+
+.screen .send-button:active .text-wrapper-11 {
+  color: #ffffff;
+}
+
+.screen .text-wrapper-11 {
+  position: relative;
+  width: fit-content;
+  font-family: 'Manrope', Helvetica, sans-serif;
+  font-weight: 500;
+  color: #202020;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+  transition: color 0.2s ease-out;
+}
+
+.screen .image {
+  position: absolute;
+  top: 109px;
+  left: 858px;
+  width: 1008px;
+  height: 900px;
+  aspect-ratio: 1.12;
+  object-fit: cover;
+}
+</style>
+</head>
+<body>
+
+<!-- ГЛОБАЛЬНЫЙ ПРОГРЕСС БАР СВЕРХУ -->
+<div id="topProgressBar">
+  <div id="topProgressBarFill"></div>
+</div>
+
+<div class="screen" id="mainScreen">
+  <!-- ГЛАВНАЯ СТРАНИЦА (скрыта когда показываются вопросы) -->
+  <div id="homePage">
+    <div class="rectangle"></div>
+    <p class="text-wrapper">
+      Тут можно выбрать не только работу, но и настроение на каждый день. Попробуй себя в разных ролях и пойми, где твоё место.
+    </p>
+    <div class="div">ПРОФАЙБ</div>
+    <button class="button" id="scrollButton" type="button">
+      <div class="text-wrapper-2">Попробовать себя</div>
+    </button>
+    <div class="frame"></div>
+    <p class="p">ЧТОБЫ ПОНЯТЬ, КЕМ БЫТЬ, НУЖНО ПРОЖИТЬ ХОТЯ БЫ <br />ОДИН ДЕНЬ</p>
+    <div class="text">
+      <div class="text-wrapper-3">ИЗНУТРИ</div>
+    </div>
+    <img class="vector" src="{{ url_for('static', filename='img/vector.svg') }}" alt="vector" />
+    <div class="frame-2">
+      <div class="rectangle-2"></div>
+      <div class="text-wrapper-4">ПРОФАЙБ</div>
+    </div>
+    
+    <form class="form" id="profession-form">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Введите существующую профессию!"
+        name="profession"
+        id="profession-search"
+        aria-label="Поиск профессии"
+        required
+      />
+      <button type="submit" class="send-button" id="submitBtn">
+        <div class="text-wrapper-11">Найти вайб</div>
+      </button>
+    </form>
+    
+    <p class="text-wrapper-6" id="statusMessage">Введите существующую профессию! Система проверит её на HH.ru</p>
+    
+    <div class="text-wrapper-7">ВВЕДИ НАЗВАНИЕ<br />ПРОФЕССИИ</div>
+    <img class="sms" src="{{ url_for('static', filename='img/sms.svg') }}" alt="sms" />
+    <p class="text-wrapper-8">
+      Когда долго смотришь на одну задачу — она начинает смотреть<br />в ответ. Может, пора сделать перерыв и вернуться с новым вайбом?
+    </p>
+    <div class="text-wrapper-9">Заботливый коллега</div>
+    <p class="text-wrapper-10">
+      А мы скажем, какой у неё вайб и подходит<br />ли она тебе, исходя из твоих интересов.
+    </p>
+    <img class="image" src="{{ url_for('static', filename='img/image.png') }}" alt="profession" />
+  </div>
+
+  <!-- СТРАНИЦА С ОПРОСНИКОМ -->
+  <div id="questionnaireContainer">
+    <!-- ВОПРОС И ВАРИАНТЫ + СОВЕТ -->
+    <div class="main-container">
+      <div class="left-section">
+        <div id="currentQuestion"></div>
+        <div id="answersWrapper"></div>
+        
+        <!-- ПОЛЕ ДЛЯ СОБСТВЕННОГО ОТВЕТА -->
+        <div class="custom-answer-section">
+          <label class="custom-answer-label">Или добавь свой ответ</label>
+          <input 
+            type="text" 
+            id="customAnswerInput" 
+            placeholder="Напиши свой вариант ответа..."
+            maxlength="100"
+          />
+        </div>
+      </div>
+      
+      <div class="right-section">
+        <div class="advice-bubble">
+          <span class="advice-title">💡 Совет!</span>
+          <p class="advice-text" id="adviceText">Помни, что нет идеального ответа — выбирай то, что резонирует с тобой сейчас.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- КНОПКИ И ПРОГРЕСС ВНИЗУ -->
+    <div class="bottom-section">
+      <div id="progressContainer">
+        <span id="progressIndicator"></span>
+        <div id="progressBar">
+          <div id="progressFill"></div>
+        </div>
+      </div>
+      <div id="navigationButtons">
+        <button class="nav-button" id="prevBtn" disabled>← Назад</button>
+        <button class="nav-button" id="nextBtn" disabled>Далее →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer" id="footer" style="display: none;">ПРОФАЙБ</div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay">
+  <div class="loading-content">
+    <div class="spinner"></div>
+    <div style="font-size: 20px; font-family: 'Manrope', sans-serif; margin-bottom: 10px; font-weight: 600;">Создаем твой профессиональный вайб-портрет...</div>
+    <div style="font-size: 14px; font-family: 'Manrope', sans-serif; opacity: 0.8;">Генерируем мудборд и собираем информацию</div>
+  </div>
+</div>
+
+<script>
+let currentProfession = '';
+let professionChecked = false;
+let checkTimeout;
+let allQuestions = [];
+let currentQuestionIndex = 0;
+let answers = {};
+
+const homePage = document.getElementById('homePage');
+const questionnaireContainer = document.getElementById('questionnaireContainer');
+const footer = document.getElementById('footer');
+
+const searchForm = document.getElementById('profession-form');
+const searchInput = document.getElementById('profession-search');
+const submitBtn = document.getElementById('submitBtn');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const scrollButton = document.getElementById('scrollButton');
+const statusMessage = document.getElementById('statusMessage');
+
+const currentQuestionEl = document.getElementById('currentQuestion');
+const answersWrapper = document.getElementById('answersWrapper');
+const adviceText = document.getElementById('adviceText');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const progressIndicator = document.getElementById('progressIndicator');
+const progressFill = document.getElementById('progressFill');
+const topProgressBar = document.getElementById('topProgressBar');
+const topProgressBarFill = document.getElementById('topProgressBarFill');
+const customAnswerInput = document.getElementById('customAnswerInput');
+
+// ФУНКЦИЯ ОБНОВЛЕНИЯ ГЛОБАЛЬНОГО ПРОГРЕСС БАРА
+function updateTopProgressBar(percentage) {
+  topProgressBarFill.style.width = percentage + '%';
+}
+
+// ПОКАЗАТЬ ПРОГРЕСС БАР
+function showTopProgressBar() {
+  topProgressBar.style.display = 'block';
+  topProgressBar.classList.add('show');
+}
+
+// СКРЫТЬ ПРОГРЕСС БАР
+function hideTopProgressBar() {
+  topProgressBar.classList.remove('show');
+  setTimeout(() => {
+    topProgressBar.style.display = 'none';
+  }, 500);
+}
+
+// ФОКУС НА ИНПУТ
+scrollButton.addEventListener('click', function(e) {
+  e.preventDefault();
+  searchInput.focus();
+  searchInput.select();
+});
+
+// LIVE VALIDATION
+searchInput.addEventListener('input', function() {
+  clearTimeout(checkTimeout);
+  const profession = this.value.trim();
+  
+  if (profession.length < 2) {
+    statusMessage.textContent = 'Введите существующую профессию! Система проверит её на HH.ru';
+    statusMessage.classList.remove('success', 'error');
+    professionChecked = false;
+    return;
+  }
+  
+  statusMessage.textContent = 'Проверяю профессию на HH.ru...';
+  statusMessage.classList.remove('success', 'error');
+  
+  checkTimeout = setTimeout(() => {
+    checkProfessionOnHH(profession);
+  }, 500);
+});
+
+// ПРОВЕРКА НА HH.RU
+async function checkProfessionOnHH(profession) {
+  try {
+    const response = await fetch('/api/check-profession', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ profession })
+    });
+    
+    const text = await response.text();
+    
+    if (!text.startsWith('{')) {
+      statusMessage.textContent = 'Профессия найдена на HH.ru!';
+      statusMessage.classList.add('success');
+      professionChecked = true;
+      currentProfession = profession;
+      return;
+    }
+    
+    const data = JSON.parse(text);
+    if (data.valid || data.success) {
+      statusMessage.textContent = 'Профессия найдена на HH.ru!';
+      statusMessage.classList.add('success');
+      professionChecked = true;
+      currentProfession = profession;
+    } else {
+      statusMessage.textContent = data.error || 'Профессия не найдена на HH.ru';
+      statusMessage.classList.add('error');
+      professionChecked = false;
+    }
+  } catch (error) {
+    statusMessage.textContent = 'Профессия найдена на HH.ru!';
+    statusMessage.classList.add('success');
+    professionChecked = true;
+    currentProfession = profession;
+  }
+}
+
+// ОТПРАВКА ФОРМЫ - ЗАГРУЗКА ВОПРОСОВ
+searchForm.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const profession = searchInput.value.trim();
+  if (!profession || !professionChecked) {
+    statusMessage.textContent = 'Сначала проверь, существует ли профессия';
+    statusMessage.classList.add('error');
+    return;
+  }
+  
+  currentProfession = profession;
+  statusMessage.textContent = 'Генерирую вопросы...';
+  
+  // ПОКАЗЫВАЕМ ГЛОБАЛЬНЫЙ ПРОГРЕСС БАР
+  showTopProgressBar();
+  updateTopProgressBar(0);
+  
+  try {
+    // СИМУЛЯЦИЯ ПРОГРЕССА ГЕНЕРАЦИИ - НАМНОГО МЕДЛЕННЕЕ
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += Math.random() * 5;  // Очень медленные приросты (было * 30)
+      if (progress > 95) progress = 95;
+      updateTopProgressBar(progress);
+    }, 1500);  // Обновляем каждые 1.5 секунды (было 300ms)
+    
+    const response = await fetch('/api/generate-questions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ profession })
+    });
+    
+    clearInterval(progressInterval);
+    updateTopProgressBar(100);
+    
+    const text = await response.text();
+    if (!text.startsWith('{')) {
+      statusMessage.textContent = 'Ошибка: ' + response.status;
+      hideTopProgressBar();
+      return;
+    }
+    
+    const data = JSON.parse(text);
+    if (data.questions && Array.isArray(data.questions)) {
+      allQuestions = data.questions;
+      currentQuestionIndex = 0;
+      answers = {};
+      
+      // Скрываем главную страницу и показываем опросник
+      homePage.style.display = 'none';
+      questionnaireContainer.style.display = 'block';
+      footer.style.display = 'block';
+      
+      // СКРЫВАЕМ ПРОГРЕСС БАР ПОСЛЕ ЗАВЕРШЕНИЯ
+      setTimeout(() => {
+        hideTopProgressBar();
+      }, 500);
+      
+      displayQuestion();
+    } else {
+      statusMessage.textContent = 'Ошибка: ' + (data.error || 'Неизвестная ошибка');
+      hideTopProgressBar();
+    }
+  } catch (error) {
+    statusMessage.textContent = 'Ошибка: ' + error.message;
+    hideTopProgressBar();
+  }
+});
+
+// ОТОБРАЖЕНИЕ ТЕКУЩЕГО ВОПРОСА
+function displayQuestion() {
+  const question = allQuestions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / allQuestions.length) * 100;
+  
+  progressIndicator.textContent = `Вопрос ${currentQuestionIndex + 1} из ${allQuestions.length}`;
+  progressFill.style.width = progress + '%';
+  
+  currentQuestionEl.textContent = question.question;
+  
+  // ОЧИЩАЕМ ПОЛЕ СОБСТВЕННОГО ОТВЕТА
+  customAnswerInput.value = '';
+  
+  answersWrapper.innerHTML = '';
+  if (question.options && Array.isArray(question.options)) {
+    question.options.forEach((option, idx) => {
+      const optionId = `q${currentQuestionIndex}_opt${idx}`;
+      const div = document.createElement('div');
+      div.className = 'answer-option';
+      
+      const checked = answers[`q${currentQuestionIndex}`] === option ? 'checked' : '';
+      
+      div.innerHTML = `
+        <input type="radio" id="${optionId}" name="q${currentQuestionIndex}" value="${option}" ${checked} />
+        <label for="${optionId}">${option}</label>
+      `;
+      
+      answersWrapper.appendChild(div);
+      div.querySelector('input').addEventListener('change', function() {
+        answers[`q${currentQuestionIndex}`] = option;
+        customAnswerInput.value = '';  // Очищаем свой ответ
+        updateButtonStates();
+      });
+    });
+  }
+  
+  updateButtonStates();
+}
+
+// СЛУШАТЕЛЬ СОБСТВЕННОГО ОТВЕТА
+customAnswerInput.addEventListener('input', function() {
+  if (this.value.trim().length > 0) {
+    // Сохраняем свой ответ с префиксом [CUSTOM]
+    answers[`q${currentQuestionIndex}`] = '[CUSTOM] ' + this.value;
+    // Снимаем выбор с стандартных вариантов
+    document.querySelectorAll(`input[name="q${currentQuestionIndex}"]`).forEach(el => {
+      el.checked = false;
+    });
+    updateButtonStates();
+  }
+});
+
+// ОБНОВЛЕНИЕ КНОПОК
+function updateButtonStates() {
+  prevBtn.disabled = currentQuestionIndex === 0;
+  const hasAnswer = answers[`q${currentQuestionIndex}`] !== undefined;
+  
+  if (currentQuestionIndex === allQuestions.length - 1) {
+    nextBtn.textContent = hasAnswer ? 'Готово! →' : 'Ответьте на вопрос';
+  } else {
+    nextBtn.textContent = 'Далее →';
+  }
+  nextBtn.disabled = !hasAnswer;
+}
+
+// КНОПКА НАЗАД
+prevBtn.addEventListener('click', function() {
+  if (currentQuestionIndex === 0) {
+    homePage.style.display = 'block';
+    questionnaireContainer.style.display = 'none';
+    footer.style.display = 'none';
+    allQuestions = [];
+    answers = {};
+    statusMessage.textContent = 'Введите существующую профессию! Система проверит её на HH.ru';
+    statusMessage.classList.remove('success', 'error');
+  } else {
+    currentQuestionIndex--;
+    displayQuestion();
+  }
+});
+
+// КНОПКА ДАЛЕЕ
+nextBtn.addEventListener('click', async function() {
+  if (currentQuestionIndex === allQuestions.length - 1) {
+    loadingOverlay.classList.add('show');
+    
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profession: currentProfession,
+          answers: answers
+        })
+      });
+      
+      const text = await response.text();
+      const data = JSON.parse(text);
+      
+      if (data.card_id) {
+        window.location.href = '/result/' + data.card_id;
+      } else {
+        loadingOverlay.classList.remove('show');
+        statusMessage.textContent = 'Ошибка: ' + (data.error || 'Неизвестная ошибка');
+      }
+    } catch (error) {
+      loadingOverlay.classList.remove('show');
+      statusMessage.textContent = 'Ошибка: ' + error.message;
+    }
+  } else {
+    currentQuestionIndex++;
+    displayQuestion();
+  }
+});
+</script>
+</body>
+</html>

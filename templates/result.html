@@ -1,0 +1,1191 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.chat-message {
+    background: none !important;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0;
+    border-left: none !important;
+}
+
+.calendar-time-big {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 24px !important;
+    font-weight: 400 !important;
+    line-height: 1;
+    word-break: break-word;
+}
+
+:root {
+  --primary: #6220D9;
+  --secondary: #B9E901;
+  --orange: #FF6B35;
+  --text-dark: #000000;
+  --text-light: #FFFFFF;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background: #FFFFFF;
+  color: var(--text-dark);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ШАПКА */
+.result-header {
+  padding: 20px 0;
+  margin-bottom: 20px;
+}
+
+.result-header-logo {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--primary);
+}
+
+/* ПРОФЕССИЯ */
+.profession-title {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+}
+
+.profession-name {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+/* СКРЫТЬ НАВБАР */
+nav, header, .navbar {
+  display: none !important;
+}
+
+/* МУЗЫКА */
+.music-section {
+  background: var(--primary);
+  color: var(--text-light);
+  border-radius: 24px;
+  padding: 50px 40px;
+  margin-bottom: 40px;
+}
+
+.music-section .block-title {
+  color: var(--text-light);
+}
+
+/* КАСТОМНЫЙ ПЛЕЕР - ОБЁРТКА */
+.music-player-container {
+  margin: 30px 0;
+}
+
+.music-player-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  opacity: 0.9;
+}
+
+.music-player-label-icon {
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+/* КАСТОМНЫЙ ПЛЕЕР */
+.music-player-wrapper {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50px;
+  padding: 15px 25px;
+  border: none;
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.play-btn {
+  width: 48px;
+  height: 48px;
+  background: var(--secondary);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  font-size: 24px;
+  color: var(--primary);
+}
+
+.play-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(185, 233, 1, 0.6);
+}
+
+.play-btn.playing {
+  background: var(--secondary);
+}
+
+.time-display {
+  font-size: 12px;
+  opacity: 0.9;
+  min-width: 45px;
+  font-weight: 500;
+}
+
+.progress-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#music-player {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+#music-player::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--secondary);
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(185, 233, 1, 0.6);
+  border: 2px solid var(--text-light);
+}
+
+#music-player::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--secondary);
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(185, 233, 1, 0.6);
+  border: 2px solid var(--text-light);
+}
+
+/* КОНТЕЙНЕР С ДИНАМИКОМ И ГРОМКОСТЬЮ */
+.volume-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.volume-btn {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  color: var(--text-light);
+  padding: 0;
+}
+
+.volume-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.volume-btn.muted {
+  background: rgba(185, 233, 1, 0.2);
+}
+
+#volumeControl {
+  width: 0;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  transition: width 0.3s ease;
+}
+
+#volumeControl::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--secondary);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(185, 233, 1, 0.5);
+}
+
+#volumeControl::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--secondary);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(185, 233, 1, 0.5);
+}
+
+.volume-container:hover #volumeControl {
+  width: 60px;
+}
+
+.track-list {
+  margin-top: 30px;
+}
+
+.track-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-left: 4px solid var(--secondary);
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.track-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(5px);
+}
+
+.track-info {
+  flex: 1;
+}
+
+.track-name {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.track-artist {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.track-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tag {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.track-link {
+  margin-left: 15px;
+  flex-shrink: 0;
+}
+
+.track-link a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.track-link a:hover {
+  background: var(--secondary);
+  color: var(--text-dark);
+  transform: scale(1.1);
+  border-color: var(--secondary);
+}
+
+/* БЛОКИ КОНТЕНТА */
+.content-block {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 50px 40px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.content-block.primary {
+  background: var(--primary);
+  color: var(--text-light);
+}
+
+.content-block.orange {
+  background: var(--orange);
+  color: var(--text-light);
+}
+
+.block-title {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* КАЛЕНДАРИК - РАБОЧИЙ ДЕНЬ */
+.schedule-calendar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.calendar-item {
+  background: linear-gradient(135deg, #F8F9FF 0%, #EFF0FF 100%);
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--primary);
+  box-shadow: 0 2px 10px rgba(98, 32, 217, 0.1);
+}
+
+.calendar-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(98, 32, 217, 0.15);
+}
+
+.calendar-time {
+  background: var(--primary);
+  color: var(--text-light);
+  padding: 25px 20px;
+  text-align: center;
+}
+
+.calendar-time-big {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+  word-break: break-word;
+}
+
+.calendar-text {
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-dark);
+  min-height: 100px;
+}
+
+/* КАРЬЕРНЫЙ ПУТЬ */
+.career-path {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  margin-top: 30px;
+}
+
+.career-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.career-step-number {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 0.8;
+  color: var(--secondary);
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.career-card-inner {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 25px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.career-card:hover .career-card-inner {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.career-title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.career-time {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-bottom: 12px;
+  font-weight: 500;
+  background: rgba(185, 233, 1, 0.15);
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.career-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+/* РАБОЧИЙ ЧАТ */
+.chat-container {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.chat-message {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  align-items: flex-start;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-message.user {
+  flex-direction: row-reverse;
+}
+
+.chat-bubble {
+  max-width: 70%;
+  padding: 15px 20px;
+  border-radius: 12px;
+  word-wrap: break-word;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.chat-message.bot .chat-bubble {
+  background: rgba(98, 32, 217, 0.1);
+  border-left: 3px solid var(--primary);
+  color: var(--text-dark);
+}
+
+.chat-message.user .chat-bubble {
+  background: var(--primary);
+  color: var(--text-light);
+  border-radius: 12px;
+}
+
+.chat-name {
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 5px;
+  opacity: 0.8;
+}
+
+/* ВИЗУАЛЬНЫЙ ПРОФИЛЬ */
+.moodboard {
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.moodboard img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ИНСТРУМЕНТЫ */
+.tools-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.tool-badge {
+  background: rgba(185, 233, 1, 0.15);
+  border: 1px solid var(--secondary);
+  color: var(--text-dark);
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.content-block.primary .tool-badge {
+  background: rgba(185, 233, 1, 0.2);
+  border-color: rgba(185, 233, 1, 0.4);
+  color: var(--text-light);
+}
+
+/* ТЕКСТ БЛОКОВ */
+.text-content {
+  font-size: 16px;
+  line-height: 1.8;
+  margin-top: 25px;
+}
+
+/* ПОДХОДИТ ЛИ ПРОФЕССИЯ */
+.suitability-section {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 50px 40px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  color: var(--text-dark);
+}
+
+.suitability-section .block-title {
+  color: var(--text-dark);
+}
+
+.score-display {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin: 40px 0;
+}
+
+.score-number {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.score-max {
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--text-dark);
+}
+
+.score-bar {
+  width: 100%;
+  height: 16px;
+  background: rgba(98, 32, 217, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--secondary) 0%, #8cff00 100%);
+  border-radius: 8px;
+  transition: width 0.6s ease-out;
+  width: 0%;
+}
+
+.score-text {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 20px 0;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.score-item {
+  background: linear-gradient(135deg, #F8F9FF 0%, #EFF0FF 100%);
+  padding: 25px;
+  border-radius: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.score-item-label {
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  opacity: 0.8;
+}
+
+.score-item-value {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+
+/* КНОПКИ */
+.btn-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+
+.btn {
+  min-width: 200px;
+  padding: 16px 32px;
+  border-radius: 40px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--text-light);
+}
+
+.btn-primary:hover {
+  background: #5018b8;
+  transform: scale(1.05);
+}
+
+/* FOOTER */
+.result-footer {
+  background: var(--primary);
+  color: var(--text-light);
+  padding: 60px 20px;
+  border-radius: 24px 24px 0 0;
+  text-align: center;
+  margin-top: 0;
+}
+
+.footer-text {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.footer-info {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .schedule-calendar,
+  .career-path {
+    grid-template-columns: 1fr;
+  }
+
+  .content-block {
+    padding: 30px 20px;
+  }
+
+  .score-display {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .score-number {
+    font-size: 72px;
+  }
+
+  .calendar-time-big {
+    font-size: 36px;
+  }
+
+  .chat-bubble {
+    max-width: 90%;
+  }
+
+  .btn {
+    min-width: auto;
+  }
+
+  .track-item {
+    flex-direction: column;
+  }
+
+  .track-link {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .music-player-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .music-player-label {
+    justify-content: flex-start;
+  }
+
+  .player-controls {
+    order: 0;
+  }
+
+  .profession-name {
+    font-size: 32px;
+  }
+}
+
+@media print {
+  .btn-container,
+  .result-footer {
+    display: none;
+  }
+
+  .content-block {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #eee;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ШАПКА -->
+<div class="result-header">
+  <div class="container">
+    <div class="result-header-logo">ПРОФАЙБ</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- НАЗВАНИЕ ПРОФЕССИИ -->
+  {% if card.profession %}
+  <div class="profession-title">
+    <div class="profession-name">{{ card.profession }}</div>
+  </div>
+  {% endif %}
+
+  <!-- ВИЗУАЛЬНЫЙ ПРОФИЛЬ -->
+  {% if card.image_url %}
+  <div class="moodboard">
+    <img src="{{ card.image_url }}" alt="Визуальный профиль {{ card.profession }}">
+  </div>
+  {% endif %}
+
+  <!-- МУЗЫКА -->
+  {% if card.audio_url or card.music_playlist %}
+  <div class="music-section">
+    <div class="block-title">Музыка для работы</div>
+    
+    {% if card.audio_url %}
+    <div class="music-player-container">
+      <div class="music-player-label">
+        <span class="music-player-label-icon">▶</span>
+        <span>Сгенерированная музыка для вайба</span>
+      </div>
+      <div class="music-player-wrapper">
+        <div class="player-controls">
+          <button class="play-btn" id="playBtn">▶</button>
+          <div class="time-display">
+            <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+          </div>
+          <div class="progress-container">
+            <input type="range" id="music-player" min="0" max="100" value="0">
+          </div>
+        </div>
+        <div class="volume-container">
+          <button class="volume-btn" id="volumeBtn">♪</button>
+          <input type="range" id="volumeControl" min="0" max="100" value="100">
+        </div>
+      </div>
+      <audio id="audioPlayer" style="display: none;">
+        <source src="{{ card.audio_url }}" type="audio/mpeg">
+      </audio>
+    </div>
+    {% endif %}
+
+    {% if card.music_playlist %}
+    <div class="track-list">
+      <h3 style="color: var(--text-light); margin-bottom: 20px; font-size: 18px; font-weight: 600;">Рекомендуемые треки</h3>
+      {% for track in card.music_playlist.get('tracks', []) %}
+      <div class="track-item">
+        <div class="track-info">
+          <div class="track-name">{{ track.get('name', 'Unknown') }}</div>
+          <div class="track-artist">{{ track.get('artist', 'Unknown Artist') }}</div>
+          {% if track.get('mood') %}
+          <div class="track-tags">
+            {% if track['mood'] is string %}
+              <span class="tag">{{ track['mood'] }}</span>
+            {% else %}
+              {% for mood in track.get('mood', []) %}
+              <span class="tag">{{ mood }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+        <div class="track-link">
+          {% if track.get('url') %}
+          <a href="{{ track.get('url') }}" target="_blank" rel="noopener noreferrer" title="Открыть на Last.fm">↗</a>
+          {% else %}
+          <a href="https://www.last.fm/search?q={{ track.get('artist', '') }}+{{ track.get('name', '') }}" target="_blank" rel="noopener noreferrer" title="Поиск на Last.fm">↗</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- ТИПИЧНЫЙ ДЕНЬ - КАЛЕНДАРИК -->
+  {% if card.daily_schedule %}
+  <div class="content-block">
+    <div class="block-title">Типичный рабочий день</div>
+    <div class="schedule-calendar">
+      {% for schedule in card.daily_schedule %}
+        {% set clean_text = schedule %}
+        
+        <!-- Извлекаем время (HH:MM-HH:MM) -->
+        {% if '-' in schedule and ':' in schedule %}
+          {% set time_part = schedule.split()[0] %}
+          
+          <!-- Удаляем время из начала текста -->
+          {% set text_start = schedule.find(time_part) + time_part|length %}
+          {% set description = schedule[text_start:].strip() %}
+        {% else %}
+          {% set time_part = '' %}
+          {% set description = schedule %}
+        {% endif %}
+        
+      <div class="calendar-item">
+        <div class="calendar-time">
+          <div class="calendar-time-big" style="font-weight: 700;">{{ time_part }}</div>
+        </div>
+        <div class="calendar-text">{{ description }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- КАРЬЕРНЫЙ ПУТЬ -->
+  {% if card.career_path %}
+  <div class="content-block orange">
+    <div class="block-title">Карьерный путь</div>
+    <div class="career-path">
+      {% for line in card.career_path.split('\n') %}
+        {% if line.strip() and line[0:1].isdigit() %}
+          {% set step_num = line.strip()[0] %}
+          {% set rest = line.strip()[1:].lstrip() %}
+          
+          {% if rest.startswith('.') %}
+            {% set rest = rest[1:].lstrip() %}
+          {% endif %}
+          
+          {% set title_and_desc = rest.split(':', 1) %}
+          {% set title_full = title_and_desc[0] if title_and_desc else '' %}
+          {% set description = title_and_desc[1].strip() if title_and_desc|length > 1 else '' %}
+          
+          {% set title_parts = title_full.split('(', 1) %}
+          {% set title = title_parts[0].strip() if title_parts else '' %}
+          {% set time_salary = '(' + title_parts[1] if title_parts|length > 1 else '' %}
+          
+          <div class="career-card">
+            <div class="career-step-number">{{ step_num }}</div>
+            <div class="career-card-inner">
+              <div class="career-title">{{ title }}</div>
+              {% if time_salary %}
+              <div class="career-time">{{ time_salary }}</div>
+              {% endif %}
+              <div class="career-desc">{{ description }}</div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- О ПРОФЕССИИ -->
+  {% if card.company_value %}
+  <div class="content-block primary">
+    <div class="block-title">О профессии</div>
+    <div class="text-content" style="color: var(--text-light);">{{ card.company_value }}</div>
+  </div>
+  {% endif %}
+
+  <!-- ИСПОЛЬЗУЕМЫЕ ИНСТРУМЕНТЫ -->
+  {% if card.tech_stack %}
+  <div class="content-block">
+    <div class="block-title">Инструменты и технологии</div>
+    <div class="tools-list">
+      {% for tool in card.tech_stack %}
+      <span class="tool-badge">{{ tool }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- РАБОЧИЙ ЧАТ -->
+  {% if card.chat_examples %}
+  <div class="content-block">
+    <div class="block-title">В рабочем чате</div>
+    <div class="chat-container">
+      {% for example in card.chat_examples %}
+      <div class="chat-message {% if loop.index0 % 2 == 0 %}bot{% else %}user{% endif %}">
+        <div>
+          {% if example.sender or example.chat_name %}
+          <div class="chat-name">
+            {% if example.sender %}{{ example.sender }}{% endif %}
+            {% if example.chat_name %}<br><small>{{ example.chat_name }}</small>{% endif %}
+          </div>
+          {% endif %}
+          <div class="chat-bubble">
+            {% if example.message %}{{ example.message }}{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ПОДХОДИТ ЛИ ПРОФЕССИЯ -->
+  <div class="suitability-section">
+    <div class="block-title">Подходит ли вам?</div>
+    
+    <div class="score-display">
+      <div class="score-number">{{ card.suitability_score if card.suitability_score else '?' }}</div>
+      <div class="score-max">из 10</div>
+    </div>
+
+    <div class="score-bar">
+      <div class="score-bar-fill" data-percentage="{{ (card.suitability_score | default(0)) * 10 }}"></div>
+    </div>
+
+    <div class="score-text">
+      {% if card.suitability_score >= 8 %}
+        Мы думаем, она вам подходит отлично! Это именно то, что вам нужно.
+      {% elif card.suitability_score >= 7 %}
+        Мы думаем она вам подходит на {{ card.suitability_score }}/10 по вашим предпочтениям. Хороший выбор!
+      {% elif card.suitability_score >= 5 %}
+        Мы думаем она вам подходит на {{ card.suitability_score }}/10 по вашим предпочтениям. Хороший вариант.
+      {% else %}
+        Мы думаем она вам подходит на {{ card.suitability_score }}/10 по вашим предпочтениям.
+      {% endif %}
+    </div>
+
+    <div class="score-grid">
+      <div class="score-item">
+        <div class="score-item-label">Вакансий</div>
+        <div class="score-item-value">{{ card.vacancy_stats.get('total', '–') }}</div>
+      </div>
+      <div class="score-item">
+        <div class="score-item-label">Средняя зарплата</div>
+        <div class="score-item-value">{{ card.vacancy_stats.get('avg_salary_formatted', '–').split()[0] if card.vacancy_stats.get('avg_salary_formatted') else '–' }} <span style="font-size: 14px; opacity: 0.8;">т.р</span></div>
+      </div>
+      <div class="score-item">
+        <div class="score-item-label">Конкуренция</div>
+        <div class="score-item-value" style="font-size: 18px;">{{ card.vacancy_stats.get('competition', 'Средняя') }}</div>
+      </div>
+      <div class="score-item">
+        <div class="score-item-label">Перспективы</div>
+        <div class="score-item-value" style="font-size: 18px;">{{ card.vacancy_stats.get('perspective', 'Хорошие') }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- КНОПКА НА ГЛАВНУЮ -->
+  <div class="btn-container">
+    <a href="/" class="btn btn-primary">На главную</a>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="result-footer">
+  <div class="container">
+    <div class="footer-text">ПРОФАЙБ</div>
+    <div class="footer-info">Создано с ❤️ на хакатоне СПбГУПТД | Powered by Ollama + Stable Diffusion</div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const barFill = document.querySelector('.score-bar-fill');
+  if (barFill) {
+    const percentage = barFill.getAttribute('data-percentage');
+    barFill.style.width = percentage + '%';
+  }
+
+  // Музыкальный плеер
+  const audio = document.getElementById('audioPlayer');
+  const playBtn = document.getElementById('playBtn');
+  const musicSlider = document.getElementById('music-player');
+  const currentTimeDisplay = document.getElementById('currentTime');
+  const durationDisplay = document.getElementById('duration');
+  const volumeBtn = document.getElementById('volumeBtn');
+  const volumeControl = document.getElementById('volumeControl');
+
+  if (audio && playBtn && musicSlider) {
+    // Форматирование времени
+    function formatTime(seconds) {
+      if (!seconds || isNaN(seconds)) return '0:00';
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // Обновление длительности при загрузке
+    audio.addEventListener('loadedmetadata', function() {
+      durationDisplay.textContent = formatTime(audio.duration);
+      musicSlider.max = audio.duration || 100;
+    });
+
+    // Обновление текущего времени и слайдера
+    audio.addEventListener('timeupdate', function() {
+      currentTimeDisplay.textContent = formatTime(audio.currentTime);
+      musicSlider.value = audio.currentTime;
+    });
+
+    // Кнопка плей/пауза
+    playBtn.addEventListener('click', function() {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸';
+        playBtn.classList.add('playing');
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶';
+        playBtn.classList.remove('playing');
+      }
+    });
+
+    // Слайдер управления временем
+    musicSlider.addEventListener('input', function() {
+      audio.currentTime = musicSlider.value;
+    });
+
+    // Управление громкостью
+    if (volumeControl) {
+      volumeControl.addEventListener('input', function() {
+        audio.volume = this.value / 100;
+        if (this.value == 0) {
+          volumeBtn.classList.add('muted');
+        } else {
+          volumeBtn.classList.remove('muted');
+        }
+      });
+
+      volumeBtn.addEventListener('click', function() {
+        if (audio.volume > 0) {
+          audio.volume = 0;
+          volumeControl.value = 0;
+          volumeBtn.classList.add('muted');
+        } else {
+          audio.volume = 1;
+          volumeControl.value = 100;
+          volumeBtn.classList.remove('muted');
+        }
+      });
+    }
+
+    // Автозапуск музыки
+    setTimeout(() => {
+      audio.play().catch(err => {
+        console.log('Автозапуск заблокирован:', err);
+      });
+      playBtn.textContent = '⏸';
+      playBtn.classList.add('playing');
+    }, 500);
+
+    // Обновление кнопки при окончании
+    audio.addEventListener('ended', function() {
+      playBtn.textContent = '▶';
+      playBtn.classList.remove('playing');
+    });
+  }
+});
+</script>
+
+{% endblock %}

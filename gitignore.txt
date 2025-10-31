@@ -1,0 +1,63 @@
+# Python
+venv/
+env/
+ENV/
+
+stable-diffusion-webui-1.10.1/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Generated files
+static/images/*
+!static/images/.gitkeep
+static/audio/*
+!static/audio/.gitkeep
+
+# OS
+Thumbs.db
+.DS_Store
+*.bak
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Flask
+instance/
+.webassets-cache
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation
+docs/_build/
